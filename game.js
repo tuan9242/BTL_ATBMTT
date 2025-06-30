@@ -22,6 +22,44 @@ class AuthSystem {
         
         // Logout
         document.getElementById('logout-btn').addEventListener('click', () => this.logout());
+        
+        // Handle Enter key press in login form
+        document.getElementById('login-username').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('login-password').focus();
+            }
+        });
+        
+        document.getElementById('login-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.login();
+            }
+        });
+        
+        // Handle Enter key press in register form
+        document.getElementById('register-username').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('register-email').focus();
+            }
+        });
+        
+        document.getElementById('register-email').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('register-password').focus();
+            }
+        });
+        
+        document.getElementById('register-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('register-confirm-password').focus();
+            }
+        });
+        
+        document.getElementById('register-confirm-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.register();
+            }
+        });
     }
 
     switchTab(tab) {
@@ -40,8 +78,22 @@ class AuthSystem {
         // Clear messages
         document.getElementById('login-message').textContent = '';
         document.getElementById('login-message').classList.remove('error', 'success');
+        document.getElementById('login-message').style.display = 'none';
+        
         document.getElementById('register-message').textContent = '';
         document.getElementById('register-message').classList.remove('error', 'success');
+        document.getElementById('register-message').style.display = 'none';
+        
+        // Clear form fields when switching to a tab
+        if (tab === 'login') {
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+        } else if (tab === 'register') {
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-confirm-password').value = '';
+        }
     }
 
     async getUsers() {
@@ -89,30 +141,24 @@ class AuthSystem {
         }
         
         try {
-            const users = await this.getUsers();
-            const user = users.find(u => u.username === username);
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
             
-            if (!user) {
-                this.showMessage(messageElement, 'Tên đăng nhập không tồn tại', 'error');
-                return;
-            }
+            const data = await response.json();
             
-            // Verify password using bcrypt
-            const isMatch = await bcrypt.compare(password, user.password);
-            
-            if (!isMatch) {
-                this.showMessage(messageElement, 'Mật khẩu không chính xác', 'error');
+            if (!response.ok) {
+                this.showMessage(messageElement, data.error || 'Đăng nhập thất bại', 'error');
                 return;
             }
             
             // Login successful
-            this.currentUser = user;
-            localStorage.setItem('currentUser', JSON.stringify({
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                gameData: user.gameData
-            }));
+            this.currentUser = data;
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             
             this.updateUserDisplay();
             this.showWelcomeScreen();
@@ -134,6 +180,7 @@ class AuthSystem {
             }
         };
         
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
         this.updateUserDisplay();
         this.showWelcomeScreen();
     }
@@ -162,57 +209,33 @@ class AuthSystem {
         }
         
         try {
-            const users = await this.getUsers();
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
             
-            // Check if username or email already exists
-            if (users.some(u => u.username === username)) {
-                this.showMessage(messageElement, 'Tên đăng nhập đã tồn tại', 'error');
+            const data = await response.json();
+            
+            if (!response.ok) {
+                this.showMessage(messageElement, data.error || 'Đăng ký thất bại', 'error');
                 return;
             }
             
-            if (users.some(u => u.email === email)) {
-                this.showMessage(messageElement, 'Email đã được sử dụng', 'error');
-                return;
-            }
+            this.showMessage(messageElement, data.message || 'Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.', 'success');
             
-            // Hash password
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
+            // Clear form
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-confirm-password').value = '';
             
-            // Create new user
-            const newUser = {
-                id: Date.now().toString(),
-                username,
-                email,
-                password: hashedPassword,
-                gameData: {
-                    highestLevel: 1,
-                    totalScore: 0,
-                    completedGames: 0
-                }
-            };
-            
-            users.push(newUser);
-            
-            // Save updated users list
-            const saved = await this.saveUsers(users);
-            
-            if (saved) {
-                this.showMessage(messageElement, 'Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.', 'success');
-                
-                // Clear form
-                document.getElementById('register-username').value = '';
-                document.getElementById('register-email').value = '';
-                document.getElementById('register-password').value = '';
-                document.getElementById('register-confirm-password').value = '';
-                
-                // Switch to login tab after a delay
-                setTimeout(() => {
-                    this.switchTab('login');
-                }, 2000);
-            } else {
-                this.showMessage(messageElement, 'Đã xảy ra lỗi khi đăng ký', 'error');
-            }
+            // Switch to login tab after a delay
+            setTimeout(() => {
+                this.switchTab('login');
+            }, 2000);
             
         } catch (error) {
             console.error('Lỗi đăng ký:', error);
@@ -229,6 +252,9 @@ class AuthSystem {
             window.gameInstance.restartGame();
         }
         
+        // Ẩn thông tin game khi đăng xuất
+        document.getElementById('game-info').style.display = 'none';
+        
         this.updateUserDisplay();
         this.showAuthScreen();
     }
@@ -244,7 +270,11 @@ class AuthSystem {
             } catch (error) {
                 console.error('Lỗi khi phân tích dữ liệu người dùng:', error);
                 localStorage.removeItem('currentUser');
+                this.showAuthScreen();
             }
+        } else {
+            // Make sure auth screen is shown if no user is logged in
+            this.showAuthScreen();
         }
     }
 
@@ -266,6 +296,13 @@ class AuthSystem {
         element.classList.remove('error', 'success');
         element.classList.add(type);
         element.style.display = 'block';
+        
+        // Auto-hide success messages after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
     }
 
     showAuthScreen() {
@@ -273,6 +310,8 @@ class AuthSystem {
             screen.classList.remove('active');
         });
         document.getElementById('auth-screen').classList.add('active');
+        // Ẩn thông tin game khi ở màn hình đăng nhập
+        document.getElementById('game-info').style.display = 'none';
     }
 
     showWelcomeScreen() {
@@ -280,26 +319,46 @@ class AuthSystem {
             screen.classList.remove('active');
         });
         document.getElementById('welcome-screen').classList.add('active');
+        // Hiển thị thông tin game sau khi đăng nhập
+        document.getElementById('game-info').style.display = 'flex';
     }
 
     // Method to save user game data
     async saveUserGameData(gameData) {
         if (!this.currentUser || this.currentUser.id === 'guest') {
+            console.log('Không lưu dữ liệu cho người dùng khách');
             return; // Don't save data for guests
         }
         
+        console.log('Lưu dữ liệu trò chơi cho người dùng:', this.currentUser.username);
+        console.log('Dữ liệu trò chơi:', gameData);
+        
         try {
-            const users = await this.getUsers();
-            const userIndex = users.findIndex(u => u.id === this.currentUser.id);
+            // Sử dụng API endpoint mới để cập nhật dữ liệu người dùng
+            const response = await fetch('/api/update-game-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: this.currentUser.id,
+                    gameData: gameData
+                })
+            });
             
-            if (userIndex !== -1) {
-                users[userIndex].gameData = gameData;
-                await this.saveUsers(users);
-                
-                // Update local storage
-                this.currentUser.gameData = gameData;
-                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            const data = await response.json();
+            console.log('Kết quả lưu dữ liệu:', data);
+            
+            if (!response.ok) {
+                console.error('Lỗi khi lưu dữ liệu trò chơi:', data.error);
+                return;
             }
+            
+            // Update local storage
+            this.currentUser.gameData = gameData;
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            console.log('Đã cập nhật localStorage');
+            
         } catch (error) {
             console.error('Lỗi khi lưu dữ liệu trò chơi:', error);
         }
@@ -430,6 +489,13 @@ class BankSecurityGame {
             screen.classList.remove('active');
         });
         document.getElementById(screenId).classList.add('active');
+        
+        // Hiển thị thông tin game khi ở các màn hình game
+        if (screenId === 'auth-screen') {
+            document.getElementById('game-info').style.display = 'none';
+        } else {
+            document.getElementById('game-info').style.display = 'flex';
+        }
     }
 
     // Generate Transactions
@@ -905,4 +971,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize Game Instance
 window.addEventListener('DOMContentLoaded', () => {
     window.gameInstance = new BankSecurityGame();
-}); 
+});

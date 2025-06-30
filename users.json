@@ -9,5 +9,16 @@
       "totalScore": 0,
       "completedGames": 0
     }
+  },
+  {
+    "id": "1751305188361",
+    "username": "12345",
+    "email": "12345@gmail.com",
+    "password": "$2a$10$xXzOBQF2QOU6vhaqNRDkzuWCySLKcJEy7sx10N.Y4oDQExNrAB0zC",
+    "gameData": {
+      "highestLevel": 1,
+      "totalScore": 0,
+      "completedGames": 0
+    }
   }
 ]
