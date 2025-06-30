@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1751287625660",
+    "username": "123",
+    "email": "123@gmail.com",
+    "password": "$2a$10$V7z6CJBD0s/YAINeU3TdWe726d1qJxLBg4swgk7HzlPYUXYSzEIh6",
+    "gameData": {
+      "highestLevel": 1,
+      "totalScore": 0,
+      "completedGames": 0
+    }
+  }
+]

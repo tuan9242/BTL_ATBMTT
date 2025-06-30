@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống mã hóa ngân hàng - Game Bảo mật</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Hệ thống mã hóa ngân hàng</h1>
+            </div>
+            <div class="game-info">
+                <div class="level-info">
+                    <span>Cấp độ: <span id="current-level">1</span></span>
+                </div>
+                <div class="score-info">
+                    <span>Điểm: <span id="current-score">0</span></span>
+                </div>
+                <div class="transactions-info">
+                    <span>Giao dịch: <span id="processed-transactions">0</span>/<span id="total-transactions">5</span></span>
+                </div>
+            </div>
+            <div class="user-info">
+                <span id="user-display">Khách</span>
+                <button id="logout-btn" class="btn btn-small" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="main-content">
+            <!-- Auth Screen -->
+            <div id="auth-screen" class="screen active">
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <button id="login-tab" class="auth-tab active">Đăng nhập</button>
+                        <button id="register-tab" class="auth-tab">Đăng ký</button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <div id="login-form" class="auth-form active">
+                        <div class="form-group">
+                            <label for="login-username">
+                                <i class="fas fa-user"></i> Tên đăng nhập
+                            </label>
+                            <input type="text" id="login-username" placeholder="Nhập tên đăng nhập">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">
+                                <i class="fas fa-lock"></i> Mật khẩu
+                            </label>
+                            <input type="password" id="login-password" placeholder="Nhập mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <button id="login-btn" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button id="guest-login-btn" class="btn btn-secondary">
+                                <i class="fas fa-user-secret"></i> Chơi với tư cách khách
+                            </button>
+                        </div>
+                        <div id="login-message" class="auth-message"></div>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div id="register-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="register-username">
+                                <i class="fas fa-user"></i> Tên đăng nhập
+                            </label>
+                            <input type="text" id="register-username" placeholder="Nhập tên đăng nhập">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" id="register-email" placeholder="Nhập địa chỉ email">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">
+                                <i class="fas fa-lock"></i> Mật khẩu
+                            </label>
+                            <input type="password" id="register-password" placeholder="Nhập mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">
+                                <i class="fas fa-lock"></i> Xác nhận mật khẩu
+                            </label>
+                            <input type="password" id="register-confirm-password" placeholder="Nhập lại mật khẩu">
+                        </div>
+                        <div class="form-group">
+                            <button id="register-btn" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Đăng ký
+                            </button>
+                        </div>
+                        <div id="register-message" class="auth-message"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="screen">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h2>Chào mừng đến với Hệ thống mã hóa ngân hàng</h2>
+                    <p>Bạn là quản trị viên bảo mật của ngân hàng. Nhiệm vụ của bạn là đảm bảo an toàn cho các giao dịch tài chính bằng cách sử dụng các thuật toán mã hóa tiên tiến.</p>
+                    
+                    <div class="algorithm-info">
+                        <div class="algorithm-card">
+                            <i class="fas fa-lock"></i>
+                            <h3>AES</h3>
+                            <p>Mã hóa giao dịch ngân hàng</p>
+                        </div>
+                        <div class="algorithm-card">
+                            <i class="fas fa-signature"></i>
+                            <h3>RSA</h3>
+                            <p>Xác thực giao dịch</p>
+                        </div>
+                        <div class="algorithm-card">
+                            <i class="fas fa-fingerprint"></i>
+                            <h3>SHA</h3>
+                            <p>Kiểm tra tính toàn vẹn</p>
+                        </div>
+                    </div>
+
+                    <button id="start-game-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        Bắt đầu chơi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="game-screen" class="screen">
+                <div class="transaction-area">
+                    <div class="transaction-header">
+                        <h3><i class="fas fa-exchange-alt"></i> Giao dịch #<span id="transaction-number">1</span></h3>
+                        <div class="transaction-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer">30</span>s
+                        </div>
+                    </div>
+
+                    <div class="transaction-details">
+                        <div class="transaction-info">
+                            <div class="info-row">
+                                <span class="label">Từ tài khoản:</span>
+                                <span id="from-account" class="value"></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Đến tài khoản:</span>
+                                <span id="to-account" class="value"></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Số tiền:</span>
+                                <span id="amount" class="value"></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Nội dung:</span>
+                                <span id="content" class="value"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="security-steps">
+                        <h4>Các bước bảo mật cần thực hiện:</h4>
+                        
+                        <!-- Step 1: AES Encryption -->
+                        <div class="step" id="step-aes">
+                            <div class="step-header">
+                                <span class="step-number">1</span>
+                                <span class="step-title">Mã hóa AES</span>
+                                <span class="step-status" id="aes-status">Chưa thực hiện</span>
+                            </div>
+                            <div class="step-content">
+                                <p>Mã hóa thông tin giao dịch để bảo vệ dữ liệu tài chính</p>
+                                <button class="btn btn-secondary" id="encrypt-aes-btn">
+                                    <i class="fas fa-lock"></i>
+                                    Mã hóa AES
+                                </button>
+                                <div class="result-display" id="aes-result"></div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: RSA Authentication -->
+                        <div class="step" id="step-rsa">
+                            <div class="step-header">
+                                <span class="step-number">2</span>
+                                <span class="step-title">Xác thực RSA</span>
+                                <span class="step-status" id="rsa-status">Chưa thực hiện</span>
+                            </div>
+                            <div class="step-content">
+                                <p>Xác thực chữ ký để đảm bảo giao dịch hợp lệ</p>
+                                <button class="btn btn-secondary" id="verify-rsa-btn" disabled>
+                                    <i class="fas fa-signature"></i>
+                                    Xác thực RSA
+                                </button>
+                                <div class="result-display" id="rsa-result"></div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: SHA Integrity -->
+                        <div class="step" id="step-sha">
+                            <div class="step-header">
+                                <span class="step-number">3</span>
+                                <span class="step-title">Kiểm tra SHA</span>
+                                <span class="step-status" id="sha-status">Chưa thực hiện</span>
+                            </div>
+                            <div class="step-content">
+                                <p>Kiểm tra tính toàn vẹn của giao dịch</p>
+                                <button class="btn btn-secondary" id="verify-sha-btn" disabled>
+                                    <i class="fas fa-fingerprint"></i>
+                                    Kiểm tra SHA
+                                </button>
+                                <div class="result-display" id="sha-result"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="process-transaction-btn" class="btn btn-success" disabled>
+                            <i class="fas fa-check"></i>
+                            Xử lý giao dịch
+                        </button>
+                        <button id="skip-transaction-btn" class="btn btn-danger">
+                            <i class="fas fa-times"></i>
+                            Bỏ qua giao dịch
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="screen">
+                <div class="result-content">
+                    <div class="result-icon">
+                        <i id="result-icon" class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 id="result-title">Giao dịch thành công!</h2>
+                    <p id="result-message">Bạn đã xử lý giao dịch một cách an toàn và bảo mật.</p>
+                    
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Điểm nhận được:</span>
+                            <span id="points-earned" class="detail-value">+10</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Thời gian xử lý:</span>
+                            <span id="processing-time" class="detail-value">15s</span>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button id="next-transaction-btn" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i>
+                            Giao dịch tiếp theo
+                        </button>
+                        <button id="view-summary-btn" class="btn btn-secondary">
+                            <i class="fas fa-chart-bar"></i>
+                            Xem tổng kết
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="game-over-screen" class="screen">
+                <div class="game-over-content">
+                    <div class="game-over-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h2>Chúc mừng!</h2>
+                    <p>Bạn đã hoàn thành tất cả các giao dịch ở cấp độ này.</p>
+                    
+                    <div class="final-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Tổng điểm:</span>
+                            <span id="final-score" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Giao dịch đã xử lý:</span>
+                            <span id="final-transactions" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Thời gian trung bình:</span>
+                            <span id="avg-time" class="stat-value">0s</span>
+                        </div>
+                    </div>
+
+                    <div class="game-over-actions">
+                        <button id="next-level-btn" class="btn btn-primary">
+                            <i class="fas fa-level-up-alt"></i>
+                            Cấp độ tiếp theo
+                        </button>
+                        <button id="restart-game-btn" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            Chơi lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Hệ thống mã hóa ngân hàng - Game Bảo mật thông tin</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
