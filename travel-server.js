@@ -210,6 +210,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'travel.html'));
 });
 
+// Also serve travel.html directly
+app.get('/travel', (req, res) => {
+    res.sendFile(path.join(__dirname, 'travel.html'));
+});
+
 // API: Get all combos
 app.get('/api/combos', (req, res) => {
     try {
